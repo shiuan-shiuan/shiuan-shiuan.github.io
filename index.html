@@ -1,0 +1,138 @@
+﻿<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+
+<head profile="http://gmpg.org/xfn/11">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+          crossorigin="" />
+
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin=""></script>
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+    <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js'></script>
+    <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
+    <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js'></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="data.js">// data goes here</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.4/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.4/MarkerCluster.Default.css" />
+    </script>
+
+</head>
+
+<body>
+    <div id="map" style="height: 100%; border: 1px solid #AAA;"></div>
+    <script>
+
+        var coolPlaces = new L.LayerGroup();
+        var coolPlaces2 = new L.LayerGroup();
+        var coolPlaces3 = new L.LayerGroup();
+
+        $.getJSON("https://sta.ci.taiwan.gov.tw/STA_Rain/v1.0/Things?$expand=Locations&$select=name,properties&$count=true", function (data) {
+            var markerGroup1 = L.featureGroup();
+
+            data.value.forEach(function (itemData, itemInd) {
+                var latLng = L.latLng(itemData.Locations[0].location.coordinates[1],
+                                      itemData.Locations[0].location.coordinates[0]);
+                var myMarker = L.marker(latLng).addTo(markerGroup1);
+                myMarker.bindPopup('Name: ' + itemData.name +
+                    '<br />stationID: ' + itemData.properties.stationID +
+                    '<br />latlng: ' + itemData.Locations[0].location.coordinates[1] +
+                    ',' + itemData.Locations[0].location.coordinates[0] +
+                    '<br />Attribute: ' + itemData.properties.Attribute);
+
+            });
+
+            var markers1 = L.markerClusterGroup();
+            markers1.addLayer(markerGroup1);
+            markers1.addTo(coolPlaces);
+            map.fitBounds(markerGroup1.getBounds());
+
+        });
+
+        $.getJSON("https://sta.ci.taiwan.gov.tw/STA_Weather/v1.0/Things?$expand=Locations&$select=name,properties&$filter=substringof(%27%E6%B0%A3%E8%B1%A1%E7%AB%99_open-%27,name)&$count=true", function (data) {
+            var markerGroup2 = L.featureGroup();
+            data.value.forEach(function (itemData, itemInd) {
+                var latLng = L.latLng(itemData.Locations[0].location.coordinates[1],
+                                      itemData.Locations[0].location.coordinates[0]);
+                var myMarker = L.marker(latLng).addTo(markerGroup2);
+                myMarker.bindPopup('Name: ' + itemData.name +
+                    '<br />stationID: ' + itemData.properties.stationID +
+                    '<br />latlng: ' + itemData.Locations[0].location.coordinates[1] +
+                    ',' + itemData.Locations[0].location.coordinates[0]);
+            });
+
+            var markers2 = L.markerClusterGroup();
+            markers2.addLayer(markerGroup2);
+            markers2.addTo(coolPlaces2);
+            map.fitBounds(markerGroup2.getBounds());
+
+        });
+
+        $.getJSON("https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/Things?$expand=Locations&$select=name,properties&$count=true&$filter=properties/authority%20eq%20%27%E8%A1%8C%E6%94%BF%E9%99%A2%E7%92%B0%E5%A2%83%E4%BF%9D%E8%AD%B7%E7%BD%B2%27%20and%20substringof(%27%E7%A9%BA%E6%B0%A3%E5%93%81%E8%B3%AA%E6%B8%AC%E7%AB%99%27,name)"
+            , function (data) {
+                var markerGroup3 = L.featureGroup();
+                data.value.forEach(function (itemData, itemInd) {
+                    var latLng = L.latLng(itemData.Locations[0].location.coordinates[1], itemData.Locations[0].location.coordinates[0]);
+                    var myMarker = L.marker(latLng).addTo(markerGroup3);
+                    myMarker.bindPopup('Name: ' + itemData.name +
+                        '<br />city: ' + itemData.properties.city +
+                        '<br />areaName: ' + itemData.properties.areaName +
+                        '<br />stationType: ' + itemData.properties.stationType +
+                        '<br />authority: ' + itemData.properties.authority);
+
+                });
+
+                var markers3 = L.markerClusterGroup();
+                markers3.addLayer(markerGroup3);
+                markers3.addTo(coolPlaces3);
+
+                map.fitBounds(markerGroup3.getBounds());
+
+            });
+
+
+
+        var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>',
+            thunLink = '<a href="http://thunderforest.com/">Thunderforest</a>';
+
+
+        var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            osmAttrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+
+            landUrl = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png',
+            thunAttrib = '&copy; ' + osmLink + ' Contributors & ' + thunLink;
+
+        var osmMap = L.tileLayer(osmUrl, { attribution: osmAttrib }),
+            landMap = L.tileLayer(landUrl, { attribution: thunAttrib });
+
+        var map = L.map('map', {
+            layers: [osmMap]
+        })
+            .setView([24.151687694799833, 120.64116954803465], 15);
+
+
+        var baseLayers = {
+            "OSM Mapnik": osmMap,
+            "Landscape": landMap
+        };
+
+        var overlays = {
+            "Rainfall station": coolPlaces,
+            "Weather station": coolPlaces2,
+            "Air quality monitoring station": coolPlaces3
+
+        };
+
+        L.control.layers(baseLayers, overlays).addTo(map);
+
+    </script>
+
+</body>
+
+</html>

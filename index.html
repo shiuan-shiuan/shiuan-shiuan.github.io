@@ -1,4 +1,4 @@
-﻿<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
 <head profile="http://gmpg.org/xfn/11">
 
     <meta charset="utf-8" />
@@ -128,12 +128,17 @@
                         array = [];
                     }
                     else {
-                       var a2 = runlayer.toGeoJSON().features[i].geometry.geometries.length;
+                        /*
+                        var a2 = runlayer.toGeoJSON().features[i].geometry.geometries.length;
                         for (var k = 0; k < a2; k++) {
-
-                            array3 = [runlayer.toGeoJSON().features[i].geometry.geometries[k].coordinates[1], runlayer.toGeoJSON().features[i].geometry.geometries[k].coordinates[0]];
-                            array1.push(array3);
-                            var myMarker = new L.Marker(array1).addTo(map);                        
+                            var a3 = runlayer.toGeoJSON().features[i].geometry.geometries[k].coordinates.length;
+                            for (var l = 0; l < a3; l++) {
+                                array3 = [runlayer.toGeoJSON().features[i].geometry.geometries[k].coordinates[l][1], runlayer.toGeoJSON().features[i].geometry.geometries[k].coordinates[l][0]];
+                                array1.push(array3);
+                            }
+                            var polyline = L.polyline(array, { color: 'red' }).addTo(map);
+                            array1 = [];  
+                         */
                     }
                 }
             });

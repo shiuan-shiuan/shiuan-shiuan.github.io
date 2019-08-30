@@ -85,8 +85,18 @@
         function onLocationFound(e) {
             var radius = e.accuracy / 2;
 
-            L.marker(e.latlng).addTo(map)
-             //   .bindPopup("You are within " + radius + " meters from this point").openPopup();
+            var beerIcon = L.icon({
+                iconUrl: 'beer.png',
+                iconSize: [50, 50],
+                iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+            });
+
+            var myMarker = new L.Marker(e.latlng, { icon: beerIcon }).addTo(map)
+               // .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+
+            //L.marker(e.latlng).addTo(map)
+            //    .bindPopup("You are within " + radius + " meters from this point").openPopup();
 
             L.circle(e.latlng, radius).addTo(map);
         }
@@ -117,14 +127,9 @@
                         var a1 = runlayer.toGeoJSON().features[i].geometry.coordinates.length;
                         array2 = [runlayer.toGeoJSON().features[i].geometry.coordinates[1], runlayer.toGeoJSON().features[i].geometry.coordinates[0]];
                         array.push(array2);
-
-                        var redIcon = L.icon({
-                            iconUrl: 'red.ico',
-                            iconSize: [30, 30], // size of the icon
-                            iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-                        });
                         
-                        var myMarker = new L.Marker(array2, { icon: redIcon }).addTo(map);                     
+                        var myMarker = new L.marker(array2).addTo(map);
+
                         array = [];
                     }
                     else {

@@ -80,23 +80,13 @@
     </div>
 
 
-    <script>   
+    <script>
 
         function onLocationFound(e) {
             var radius = e.accuracy / 2;
 
-            var beerIcon = L.icon({
-                iconUrl: 'beer.png',
-                iconSize: [50, 50],
-                iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-            });
-
-            var myMarker = new L.Marker(e.latlng, { icon: beerIcon }).addTo(map)
-               // .bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-
-            //L.marker(e.latlng).addTo(map)
-            //    .bindPopup("You are within " + radius + " meters from this point").openPopup();
+            L.marker(e.latlng).addTo(map)
+                .bindPopup("You are within " + radius + " meters from this point").openPopup();
 
             L.circle(e.latlng, radius).addTo(map);
         }
@@ -113,7 +103,7 @@
 
         var url = '開關箱8020296_WGS84.kml';
         doSomething(url);
-        
+
         function doSomething(url) {
             var runlayer = omnivore.kml('開關箱8020296_WGS84.kml').on('ready', function (layer) {
                 this.eachLayer(function (value) {
@@ -127,9 +117,14 @@
                         var a1 = runlayer.toGeoJSON().features[i].geometry.coordinates.length;
                         array2 = [runlayer.toGeoJSON().features[i].geometry.coordinates[1], runlayer.toGeoJSON().features[i].geometry.coordinates[0]];
                         array.push(array2);
-                        
-                        var myMarker = new L.marker(array2).addTo(map);
 
+                        var markerIcon = L.icon({
+                            iconUrl: 'marker.png',
+                            iconSize: [32, 32], // size of the icon
+                            iconAnchor: [16, 32], // point of the icon which will correspond to marker's location
+                        });
+
+                        var myMarker = new L.Marker(array2, { icon: markerIcon }).addTo(map);
                         array = [];
                     }
                     else {
@@ -142,13 +137,13 @@
                                 array1.push(array3);
                             }
                             var polyline = L.polyline(array, { color: 'red' }).addTo(map);
-                            array1 = [];  
+                            array1 = [];
                          */
                     }
                 }
             });
         }
-              
+
     </script>
 </body>
 </html>
